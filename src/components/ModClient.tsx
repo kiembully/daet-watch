@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { ModHeader } from "@/components/headers";
+import { useFeedback } from "@/components/Feedback";
 import { useI18n } from "@/components/Providers";
 import { DaysBadge } from "@/components/issue";
 import { SpinnerIcon } from "@/components/icons";
@@ -17,11 +18,11 @@ interface FlaggedItem {
 
 export function ModClient({ signedIn }: { signedIn: boolean }) {
   const { t } = useI18n();
+  const { notify } = useFeedback();
 
   const [items, setItems] = useState<FlaggedItem[]>([]);
   const [candidates, setCandidates] = useState<PublicIssue[]>([]);
   const [loading, setLoading] = useState(signedIn);
-  const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [mergeTargets, setMergeTargets] = useState<Record<string, string>>({});
 
@@ -37,25 +38,24 @@ export function ModClient({ signedIn }: { signedIn: boolean }) {
         setItems(flagged.items);
         setCandidates(open.items);
       } catch (cause) {
-        setError(cause instanceof Error ? cause.message : t.common.error);
+        notify(cause instanceof Error ? cause.message : t.common.error, { tone: "error" });
       } finally {
         setLoading(false);
       }
     };
 
     void load();
-  }, [signedIn, t.common.error]);
+  }, [signedIn, t.common.error, notify]);
 
   const act = async (slug: string, body: Record<string, unknown>) => {
     setBusy(slug);
-    setError(null);
     try {
       await apiSend(`/api/mod/${slug}`, "POST", body);
       if (body.action !== "recategorise") {
         setItems((prev) => prev.filter((item) => item.issue.slug !== slug));
       }
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : t.common.error);
+      notify(cause instanceof Error ? cause.message : t.common.error, { tone: "error" });
     } finally {
       setBusy(null);
     }
@@ -75,8 +75,6 @@ export function ModClient({ signedIn }: { signedIn: boolean }) {
       <ModHeader />
       <div className="space-y-3 p-3">
         <h2 className="text-xs font-bold uppercase tracking-widest text-muted">{t.mod.flagged}</h2>
-
-        {error ? <p className="rounded-lg bg-day-red/10 p-2 text-xs text-day-red">{error}</p> : null}
 
         {loading ? (
           <div className="flex items-center gap-2 text-sm text-muted">

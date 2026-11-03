@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { useFeedback } from "@/components/Feedback";
 import { useI18n } from "@/components/Providers";
 import { CloseIcon, DropletIcon, PlusIcon, SpinnerIcon } from "@/components/icons";
 import { apiSend } from "@/lib/api-client";
@@ -29,10 +30,10 @@ export function WaterClient({
   signedIn: boolean;
 }) {
   const { t, tr, locale } = useI18n();
+  const { notify } = useFeedback();
 
   const [rows, setRows] = useState(sources);
   const [busy, setBusy] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
   const [sheet, setSheet] = useState<"truck" | "source" | null>(null);
   const [barangayId, setBarangayId] = useState("");
   const [note, setNote] = useState("");
@@ -55,7 +56,7 @@ export function WaterClient({
         ),
       );
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t.common.error);
+      notify(error instanceof Error ? error.message : t.common.error, { tone: "error" });
     } finally {
       setBusy(null);
     }
@@ -72,9 +73,9 @@ export function WaterClient({
       });
       setSheet(null);
       setNote("");
-      setMessage(t.water.truckSpotted);
+      notify(t.water.truckSpotted, { tone: "success" });
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t.common.error);
+      notify(error instanceof Error ? error.message : t.common.error, { tone: "error" });
     } finally {
       setBusy(null);
     }
@@ -91,10 +92,10 @@ export function WaterClient({
       });
       setSheet(null);
       setSourceName("");
-      setMessage(t.water.addSource);
+      notify(t.water.addSource, { tone: "success" });
       window.location.reload();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t.common.error);
+      notify(error instanceof Error ? error.message : t.common.error, { tone: "error" });
     } finally {
       setBusy(null);
     }
@@ -102,10 +103,6 @@ export function WaterClient({
 
   return (
     <div className="space-y-3 px-3 pt-2">
-      {message ? (
-        <p className="rounded-lg bg-surface-2 px-3 py-2 text-xs font-semibold text-body">{message}</p>
-      ) : null}
-
       <div className="grid grid-cols-2 gap-2">
         <button
           type="button"

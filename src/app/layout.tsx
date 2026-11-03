@@ -7,6 +7,7 @@ import { Providers } from "@/components/Providers";
 import { BottomNav } from "@/components/Shell";
 import { InstallPrompt } from "@/components/InstallPrompt";
 import { ServiceWorker } from "@/components/ServiceWorker";
+import { FeedbackProvider } from "@/components/Feedback";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -79,12 +80,14 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body className="min-h-dvh bg-surface-2 font-sans antialiased">
         <Providers>
-          <div className="mx-auto flex min-h-dvh w-full max-w-[480px] flex-col border-line bg-paper sm:border-x">
-            <main className="flex-1 pb-[calc(5.25rem+env(safe-area-inset-bottom))]">{children}</main>
-            <BottomNav />
-            <InstallPrompt />
-            <ServiceWorker />
-          </div>
+          <FeedbackProvider>
+            <div className="mx-auto flex min-h-dvh w-full max-w-[480px] flex-col border-line bg-paper sm:border-x">
+              <main className="flex-1 pb-[calc(5.25rem+env(safe-area-inset-bottom))]">{children}</main>
+              <BottomNav />
+              <InstallPrompt />
+              <ServiceWorker />
+            </div>
+          </FeedbackProvider>
         </Providers>
       </body>
     </html>

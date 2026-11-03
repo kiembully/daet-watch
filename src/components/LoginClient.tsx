@@ -5,6 +5,7 @@ import { useState } from "react";
 import { signIn } from "next-auth/react";
 
 import { LoginHeader } from "@/components/headers";
+import { useFeedback } from "@/components/Feedback";
 import { useI18n } from "@/components/Providers";
 import { SpinnerIcon } from "@/components/icons";
 
@@ -20,10 +21,10 @@ export function LoginClient({
   signedIn: boolean;
 }) {
   const { t } = useI18n();
+  const { notify } = useFeedback();
   const router = useRouter();
   const [phone, setPhone] = useState("");
   const [busy, setBusy] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
 
   if (signedIn) {
     return (
@@ -45,7 +46,6 @@ export function LoginClient({
 
   const start = async (provider: string, credentials?: Record<string, string>) => {
     setBusy(provider);
-    setError(null);
     try {
       const result = await signIn(provider, {
         ...(credentials ?? {}),
@@ -53,13 +53,13 @@ export function LoginClient({
         callbackUrl: next,
       });
       if (result?.error) {
-        setError(t.common.error);
+        notify(t.common.error, { tone: "error" });
         return;
       }
       router.push(next);
       router.refresh();
     } catch {
-      setError(t.common.error);
+      notify(t.common.error, { tone: "error" });
     } finally {
       setBusy(null);
     }
@@ -138,8 +138,6 @@ export function LoginClient({
             environment, or set <code className="font-mono">ENABLE_DEMO_LOGIN=1</code>.
           </p>
         ) : null}
-
-        {error ? <p className="text-sm text-day-red">{error}</p> : null}
 
         <p className="pt-2 text-[11px] leading-relaxed text-muted">
           Your name is hidden by default. Reports show &ldquo;Neighbor from Brgy. …&rdquo; until you

@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { MapView } from "@/components/MapView";
+import { useFeedback } from "@/components/Feedback";
 import { useI18n } from "@/components/Providers";
 import { CameraIcon, ChevronLeftIcon, CloseIcon, PinIcon, SpinnerIcon } from "@/components/icons";
 import { apiGet, apiSend } from "@/lib/api-client";
@@ -32,6 +33,7 @@ export function ReportStepper({
   signedIn: boolean;
 }) {
   const { t, tr } = useI18n();
+  const { notify } = useFeedback();
   const router = useRouter();
 
   const [step, setStep] = useState(1);
@@ -47,7 +49,6 @@ export function ReportStepper({
   const [nearby, setNearby] = useState<PublicIssue[]>([]);
   const [queued, setQueued] = useState(0);
   const [busy, setBusy] = useState<string | null>(null);
-  const [error, setError] = useState<string | null>(null);
   const [savedOffline, setSavedOffline] = useState(false);
   const [locating, setLocating] = useState(false);
 
@@ -134,7 +135,7 @@ export function ReportStepper({
       }
       setPhotos((prev) => [...prev, ...next].slice(0, 4));
     } catch {
-      setError(t.common.error);
+      notify(t.common.error, { tone: "error" });
     } finally {
       setBusy(null);
     }
@@ -149,7 +150,7 @@ export function ReportStepper({
         setLocating(false);
       },
       () => {
-        setError(t.report.gpsDenied);
+        notify(t.report.gpsDenied, { tone: "error" });
         setLocating(false);
       },
       { enableHighAccuracy: true, timeout: 10_000 },
@@ -181,7 +182,7 @@ export function ReportStepper({
       await apiSend(`/api/issues/${issue.slug}/confirm`, "POST", {});
       router.push(`/issue/${issue.slug}`);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : t.common.error);
+      notify(cause instanceof Error ? cause.message : t.common.error, { tone: "error" });
       setBusy(null);
     }
   };
@@ -193,7 +194,6 @@ export function ReportStepper({
       return;
     }
     setBusy("submit");
-    setError(null);
 
     if (!navigator.onLine) {
       await persistDraft();
@@ -213,7 +213,7 @@ export function ReportStepper({
       setSavedOffline(true);
       setQueued(result.remaining);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : t.common.error);
+      notify(cause instanceof Error ? cause.message : t.common.error, { tone: "error" });
     } finally {
       setBusy(null);
     }
@@ -228,11 +228,11 @@ export function ReportStepper({
   };
 
   const next = async () => {
-    setError(null);
-    if (step === 1 && !category) return setError(t.report.selectCategory);
-    if (step === 2 && photos.length === 0) return setError(t.report.needPhoto);
-    if (step === 3 && (!position || !effectiveBarangayId)) return setError(t.report.needLocation);
-    if (step === 4 && title.trim().length < 6) return setError(t.report.needTitle);
+    if (step === 1 && !category) return notify(t.report.selectCategory, { tone: "error" });
+    if (step === 2 && photos.length === 0) return notify(t.report.needPhoto, { tone: "error" });
+    if (step === 3 && (!position || !effectiveBarangayId))
+      return notify(t.report.needLocation, { tone: "error" });
+    if (step === 4 && title.trim().length < 6) return notify(t.report.needTitle, { tone: "error" });
 
     if (step === 4) {
       setStep(5);
@@ -366,7 +366,6 @@ export function ReportStepper({
               {locating ? <SpinnerIcon size={16} /> : <PinIcon size={18} />}
               {locating ? t.report.locating : t.report.useGps}
             </button>
-            {error ? <p className="mt-2 text-xs text-day-red">{error}</p> : null}
 
             <label className="mt-3 block text-xs font-bold uppercase tracking-wide text-muted">
               {t.report.barangay}
@@ -538,8 +537,6 @@ export function ReportStepper({
                 {t.report.offlineSaved}
               </p>
             ) : null}
-            {error ? <p className="text-sm text-day-red">{error}</p> : null}
-
             <p className="text-[11px] leading-relaxed text-muted">
               {t.issue.disclaimer} Your name stays hidden unless you turn it on in Profile.
             </p>

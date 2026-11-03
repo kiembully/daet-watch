@@ -243,6 +243,8 @@ const en = {
 
   common: {
     loading: "Loading…",
+    ok: "OK",
+    signInRequired: "Sign in to do that",
     retry: "Try again",
     cancel: "Cancel",
     save: "Save",
@@ -493,6 +495,8 @@ const fil: Dictionary = {
 
   common: {
     loading: "Naglo-load…",
+    ok: "Sige",
+    signInRequired: "Mag-sign in para magawa iyon",
     retry: "Subukan muli",
     cancel: "Kanselahin",
     save: "I-save",

@@ -6,6 +6,7 @@ import { useMemo, useState } from "react";
 
 import { DaysBadge, StatusPill } from "@/components/issue";
 import { ShareSheet } from "@/components/ShareSheet";
+import { useFeedback } from "@/components/Feedback";
 import { useI18n } from "@/components/Providers";
 import {
   CameraIcon,
@@ -48,7 +49,7 @@ export function IssueDetail({ issue, timeline, viewer, signedIn }: Props) {
   const [fixedAt, setFixedAt] = useState(issue.fixedAt);
   const [entries, setEntries] = useState(timeline);
   const [busy, setBusy] = useState<string | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
+  const { notify } = useFeedback();
   const [shareOpen, setShareOpen] = useState(false);
   const [flagged, setFlagged] = useState(viewer.flagged);
   const [photoIndex, setPhotoIndex] = useState(0);
@@ -62,7 +63,11 @@ export function IssueDetail({ issue, timeline, viewer, signedIn }: Props) {
   const milestone = useMemo(() => milestoneFor(issue.days), [issue.days]);
 
   const requireSignIn = () => {
-    router.push(`/login?next=${encodeURIComponent(`/issue/${issue.slug}`)}`);
+    const next = `/issue/${issue.slug}`;
+    notify(t.common.signInRequired, {
+      actionLabel: t.profile.signIn,
+      onAction: () => router.push(`/login?next=${encodeURIComponent(next)}`),
+    });
   };
 
   const meToo = async () => {
@@ -77,7 +82,7 @@ export function IssueDetail({ issue, timeline, viewer, signedIn }: Props) {
       setConfirmations(res.item.confirmations);
       setConfirmed(true);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t.common.error);
+      notify(error instanceof Error ? error.message : t.common.error, { tone: "error" });
     } finally {
       setBusy(null);
     }
@@ -100,11 +105,13 @@ export function IssueDetail({ issue, timeline, viewer, signedIn }: Props) {
       setStatus(res.item.status as PublicIssue["status"]);
       if (res.item.status === "fixed") {
         setFixedAt(res.item.fixedAt ?? new Date().toISOString());
-        setMessage(tr(t.issue.fixProgress, { n: res.item.progress.target, target: res.item.progress.target }));
+        notify(tr(t.issue.fixProgress, { n: res.item.progress.target, target: res.item.progress.target }), {
+          tone: "success",
+        });
         router.refresh();
       }
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t.common.error);
+      notify(error instanceof Error ? error.message : t.common.error, { tone: "error" });
     } finally {
       setBusy(null);
     }
@@ -122,14 +129,15 @@ export function IssueDetail({ issue, timeline, viewer, signedIn }: Props) {
         { reason },
       );
       setStatus(res.item.status as PublicIssue["status"]);
-      setMessage(
+      notify(
         res.item.status === "reopened"
           ? t.issue.statusReopened
           : tr(t.issue.fixProgress, { n: res.item.votes, target: res.item.threshold }),
+        { tone: res.item.status === "reopened" ? "success" : "info" },
       );
       router.refresh();
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t.common.error);
+      notify(error instanceof Error ? error.message : t.common.error, { tone: "error" });
     } finally {
       setBusy(null);
     }
@@ -142,9 +150,9 @@ export function IssueDetail({ issue, timeline, viewer, signedIn }: Props) {
     try {
       await apiSend(`/api/issues/${issue.slug}/flag`, "POST", { reason: "spam" });
       setFlagged(true);
-      setMessage(t.issue.flagged);
+      notify(t.issue.flagged, { tone: "success" });
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t.common.error);
+      notify(error instanceof Error ? error.message : t.common.error, { tone: "error" });
     } finally {
       setBusy(null);
     }
@@ -157,7 +165,7 @@ export function IssueDetail({ issue, timeline, viewer, signedIn }: Props) {
       const uploaded = await uploadPhoto(draft);
       setUpdatePhoto(uploaded.url);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t.common.error);
+      notify(error instanceof Error ? error.message : t.common.error, { tone: "error" });
     } finally {
       setBusy(null);
     }
@@ -177,7 +185,7 @@ export function IssueDetail({ issue, timeline, viewer, signedIn }: Props) {
       setUpdateText("");
       setUpdatePhoto(null);
     } catch (error) {
-      setMessage(error instanceof Error ? error.message : t.common.error);
+      notify(error instanceof Error ? error.message : t.common.error, { tone: "error" });
     } finally {
       setBusy(null);
     }
@@ -385,10 +393,6 @@ export function IssueDetail({ issue, timeline, viewer, signedIn }: Props) {
           >
             {tr(t.share.milestone, { n: milestone })}
           </button>
-        ) : null}
-
-        {message ? (
-          <p className="mt-3 rounded-lg bg-surface-2 p-2.5 text-xs font-medium text-body">{message}</p>
         ) : null}
 
         {/* map preview */}
