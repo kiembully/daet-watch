@@ -65,15 +65,18 @@ const CATEGORY_COLOURS: Record<string, string> = {
 
 function placeholderSvg(category: string, index: number): string {
   const bg = CATEGORY_COLOURS[category] ?? "#4a4a4a";
-  const label = category.toUpperCase();
+  // Deliberately quiet: a huge category word here bleeds through the share card
+  // and reads as a rendering bug. The demo marking lives in one small chip, and
+  // every seeded description already opens with "Demo data."
   return `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800" viewBox="0 0 1200 800">
   <rect width="1200" height="800" fill="${bg}"/>
-  <g fill="none" stroke="#ffffff" stroke-opacity="0.16" stroke-width="14">
+  <g fill="none" stroke="#ffffff" stroke-opacity="0.13" stroke-width="16">
     <path d="M-80 640 L520 -40"/><path d="M120 880 L760 120"/><path d="M360 880 L1000 120"/>
   </g>
-  <text x="64" y="150" font-family="Helvetica, Arial, sans-serif" font-size="34" letter-spacing="6" fill="#ffffff" fill-opacity="0.72">DAET WATCH · DEMO PHOTO</text>
-  <text x="60" y="360" font-family="Helvetica, Arial, sans-serif" font-size="140" font-weight="bold" fill="#ffffff">${label}</text>
-  <text x="64" y="430" font-family="Helvetica, Arial, sans-serif" font-size="40" fill="#ffffff" fill-opacity="0.85">Placeholder image ${index}</text>
+  <g opacity="0.9">
+    <rect x="48" y="686" width="196" height="52" rx="12" fill="#000000" fill-opacity="0.28"/>
+    <text x="68" y="720" font-family="Helvetica, Arial, sans-serif" font-size="22" letter-spacing="3.5" fill="#ffffff" fill-opacity="0.85">DEMO PHOTO ${index}</text>
+  </g>
 </svg>`;
 }
 
