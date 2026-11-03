@@ -3,6 +3,12 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   serverExternalPackages: ["mongoose"],
+  experimental: {
+    // Revisiting a tab you were just on should paint from the client cache
+    // instead of re-running the query: dynamic stays fresh for 30s, static for
+    // 3 minutes. New data still arrives on the next hard navigation.
+    staleTimes: { dynamic: 30, static: 180 },
+  },
   // Issue photos are served straight from Cloudinary's CDN with its own
   // transformations (f_auto,q_auto,w_*), so Next's optimizer would only add a
   // second, slower hop. Plain <img> with explicit width/height is deliberate.
