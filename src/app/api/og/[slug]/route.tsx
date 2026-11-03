@@ -88,7 +88,7 @@ export async function GET(request: Request, context: { params: Promise<{ slug: s
             alt=""
             width={width}
             height={height}
-            style={{ position: "absolute", inset: 0, width, height, objectFit: "cover", opacity: 0.26 }}
+            style={{ position: "absolute", inset: 0, width, height, objectFit: "cover", opacity: 0.17 }}
           />
         ) : null}
         <div
@@ -96,7 +96,7 @@ export async function GET(request: Request, context: { params: Promise<{ slug: s
             position: "absolute",
             inset: 0,
             background:
-              "linear-gradient(160deg, rgba(11,15,20,0.92) 0%, rgba(11,15,20,0.74) 45%, rgba(11,15,20,0.97) 100%)",
+              "linear-gradient(160deg, rgba(11,15,20,0.95) 0%, rgba(11,15,20,0.86) 45%, rgba(11,15,20,0.98) 100%)",
           }}
         />
 
