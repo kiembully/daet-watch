@@ -41,6 +41,7 @@ export function MapView({
   onDrag,
   onSelect,
   onPick,
+  selectedId = null,
   className = "h-64 w-full",
 }: {
   points: MapPoint[];
@@ -50,6 +51,7 @@ export function MapView({
   onDrag?: (lat: number, lng: number) => void;
   onSelect?: (id: string) => void;
   onPick?: (lat: number, lng: number) => void;
+  selectedId?: string | null;
   className?: string;
 }) {
   const container = useRef<HTMLDivElement | null>(null);
@@ -154,11 +156,13 @@ export function MapView({
         }
 
         const colour = TONE_COLOUR[first.tone];
+        const selected = first.id === selectedId;
+        const size = selected ? 26 : 18;
         const icon = L.divIcon({
           className: "",
-          html: `<div style="width:18px;height:18px;border-radius:999px;background:${colour};border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.4)"></div>`,
-          iconSize: [18, 18],
-          iconAnchor: [9, 9],
+          html: `<div style="width:${size}px;height:${size}px;border-radius:999px;background:${colour};border:${selected ? 3.5 : 2.5}px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,0.22),0 ${selected ? 4 : 2}px ${selected ? 14 : 6}px rgba(0,0,0,${selected ? 0.55 : 0.4});${selected ? "outline:3px solid rgba(255,255,255,0.55);outline-offset:1px;" : ""}"></div>`,
+          iconSize: [size, size],
+          iconAnchor: [size / 2, size / 2],
         });
 
         L.marker([first.lat, first.lng], { icon })
@@ -171,7 +175,7 @@ export function MapView({
     return () => {
       cancelled = true;
     };
-  }, [points]);
+  }, [points, selectedId]);
 
   // Draggable pin for the report flow.
   useEffect(() => {

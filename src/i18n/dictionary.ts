@@ -161,6 +161,16 @@ const en = {
     water: "Water sources",
     noIssues: "No issues in view.",
     tapPin: "Tap a pin to preview",
+    legend: "Legend",
+    legendTitle: "What the pins mean",
+    legendNew: "0–7 days unfixed",
+    legendAging: "8–30 days unfixed",
+    legendCritical: "31+ days unfixed",
+    legendFixed: "Fixed",
+    legendWater: "Water source",
+    legendCluster: "Several reports here — tap to zoom in",
+    legendClose: "Got it",
+    openIssue: "Open issue",
   },
 
   leaderboard: {
@@ -401,6 +411,16 @@ const fil: Dictionary = {
     water: "Pinagkukunan ng tubig",
     noIssues: "Walang issue sa view.",
     tapPin: "I-tap ang pin para sa preview",
+    legend: "Legend",
+    legendTitle: "Ano ang ibig sabihin ng mga pin",
+    legendNew: "0–7 araw na hindi naayos",
+    legendAging: "8–30 araw na hindi naayos",
+    legendCritical: "31+ araw na hindi naayos",
+    legendFixed: "Naayos",
+    legendWater: "Pinagkukunan ng tubig",
+    legendCluster: "Maraming report dito — i-tap para lumapit",
+    legendClose: "Nakuha ko na",
+    openIssue: "Buksan ang issue",
   },
 
   leaderboard: {

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
+import { MapLegend } from "@/components/MapLegend";
 import { MapView, type MapPoint } from "@/components/MapView";
 import { useI18n } from "@/components/Providers";
 import { CloseIcon, DropletIcon, PinIcon } from "@/components/icons";
@@ -72,28 +73,42 @@ export function MapClient({
 
   return (
     <div className="relative">
-      <MapView
-        points={points}
-        center={focus ?? { lat: 14.10793, lng: 122.95393 }}
-        zoom={focus ? 16 : 13}
-        className="h-[calc(100dvh-8.5rem)] w-full"
-        onSelect={(id) => {
-          const issue = issues.find((i) => i.id === id);
-          if (issue) {
-            setSelectedWater(null);
-            setSelected(issue);
-            return;
-          }
-          const source = water.find((w) => `water-${w.id}` === id);
-          if (source) {
+      {/*
+        The map lives in its OWN stacking context (`isolate`). Leaflet paints its
+        panes at z-index 400–800, so without this every sibling overlay — the
+        layer toggles, the legend, the pin preview — renders underneath the tiles
+        and is invisible until a zoom forces a repaint.
+      */}
+      <div className="relative isolate z-0">
+        <MapView
+          points={points}
+          center={focus ?? { lat: 14.10793, lng: 122.95393 }}
+          zoom={focus ? 16 : 13}
+          selectedId={selected?.id ?? (selectedWater ? `water-${selectedWater.id}` : null)}
+          onPick={() => {
+            // Tapping bare map dismisses the pin preview.
             setSelected(null);
-            setSelectedWater(source);
-          }
-        }}
-      />
+            setSelectedWater(null);
+          }}
+          className="h-[calc(100dvh-8.5rem)] w-full"
+          onSelect={(id) => {
+            const issue = issues.find((i) => i.id === id);
+            if (issue) {
+              setSelectedWater(null);
+              setSelected(issue);
+              return;
+            }
+            const source = water.find((w) => `water-${w.id}` === id);
+            if (source) {
+              setSelected(null);
+              setSelectedWater(source);
+            }
+          }}
+        />
+      </div>
 
-      {/* layer toggles */}
-      <div className="absolute left-3 top-3 flex flex-col gap-2">
+      {/* layer toggles + legend, above the map's stacking context */}
+      <div className="absolute left-3 top-3 z-10 flex flex-col gap-2">
         <button
           type="button"
           onClick={() => setShowIssues((v) => !v)}
@@ -114,17 +129,18 @@ export function MapClient({
         >
           <DropletIcon size={14} /> {t.map.water}
         </button>
+        <MapLegend />
       </div>
 
       {points.length === 0 ? (
-        <p className="absolute inset-x-0 top-1/2 -translate-y-1/2 text-center text-sm text-muted">
+        <p className="pointer-events-none absolute inset-x-0 top-1/2 z-10 -translate-y-1/2 text-center text-sm text-muted">
           {t.map.noIssues}
         </p>
       ) : null}
 
       {/* bottom sheet preview */}
       {selected ? (
-        <div className="absolute inset-x-0 bottom-0 z-30">
+        <div className="absolute inset-x-0 bottom-0 z-20">
           <div className="mx-2 mb-2 animate-[sheet-in_0.22s_cubic-bezier(0.22,1,0.36,1)] rounded-2xl border border-line bg-surface p-3 shadow-xl">
             <div className="flex items-start gap-2">
               {selected.photos[0] ? (
@@ -144,7 +160,7 @@ export function MapClient({
                   href={`/issue/${selected.slug}`}
                   className="press mt-2 inline-block rounded-lg bg-ink px-3 py-1.5 text-xs font-bold text-paper"
                 >
-                  {t.issue.viewMap}
+                  {t.map.openIssue}
                 </Link>
               </div>
               <button
@@ -161,7 +177,7 @@ export function MapClient({
       ) : null}
 
       {selectedWater ? (
-        <div className="absolute inset-x-0 bottom-0 z-30">
+        <div className="absolute inset-x-0 bottom-0 z-20">
           <div className="mx-2 mb-2 rounded-2xl border border-line bg-surface p-3 shadow-xl">
             <div className="flex items-start justify-between gap-2">
               <div>
