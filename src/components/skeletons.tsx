@@ -87,9 +87,9 @@ export function MapSkeleton() {
       <div className="relative h-[calc(100dvh-8.5rem)] w-full overflow-hidden bg-surface-2">
         <div className="absolute inset-0 opacity-60 [background-image:linear-gradient(var(--c-line)_1px,transparent_1px),linear-gradient(90deg,var(--c-line)_1px,transparent_1px)] [background-size:48px_48px]" />
         <div className="absolute right-3 top-3 flex flex-col items-end gap-2">
-          <Bar className="h-10 w-24 rounded-full" />
-          <Bar className="h-10 w-32 rounded-full" />
-          <Bar className="h-10 w-20 rounded-full" />
+          {["w-24", "w-32", "w-20"].map((w) => (
+            <div key={w} className={`h-10 ${w} rounded-full border border-line bg-surface`} />
+          ))}
         </div>
         <div className="absolute left-3 top-3 flex flex-col gap-px overflow-hidden rounded-lg border border-line">
           <div className="grid size-8 place-items-center bg-surface text-muted">+</div>
