@@ -107,8 +107,10 @@ export function MapClient({
         />
       </div>
 
-      {/* layer toggles + legend, above the map's stacking context */}
-      <div className="absolute left-3 top-3 z-10 flex flex-col gap-2">
+      {/* layer toggles + legend, above the map's stacking context.
+          Anchored top-RIGHT: Leaflet's own zoom control owns the top-left
+          corner, and the chips used to sit on top of it. */}
+      <div className="absolute right-3 top-3 z-10 flex flex-col items-end gap-2">
         <button
           type="button"
           onClick={() => setShowIssues((v) => !v)}
