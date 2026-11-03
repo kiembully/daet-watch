@@ -7,7 +7,15 @@ import { useMemo, useState } from "react";
 import { DaysBadge, StatusPill } from "@/components/issue";
 import { ShareSheet } from "@/components/ShareSheet";
 import { useI18n } from "@/components/Providers";
-import { CameraIcon, CheckIcon, FlagIcon, PinIcon, ShareIcon, SpinnerIcon } from "@/components/icons";
+import {
+  CameraIcon,
+  CheckIcon,
+  ChevronLeftIcon,
+  FlagIcon,
+  PinIcon,
+  ShareIcon,
+  SpinnerIcon,
+} from "@/components/icons";
 import { apiSend } from "@/lib/api-client";
 import type { PublicIssue } from "@/lib/dto";
 import { compressToDraftPhoto } from "@/lib/image";
@@ -218,6 +226,17 @@ export function IssueDetail({ issue, timeline, viewer, signedIn }: Props) {
             ))}
           </div>
         ) : null}
+
+        <div className="absolute left-2 top-[calc(env(safe-area-inset-top)+0.5rem)] flex gap-2">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            aria-label={t.common.back}
+            className="press grid size-10 place-items-center rounded-full bg-black/45 text-white backdrop-blur"
+          >
+            <ChevronLeftIcon size={22} />
+          </button>
+        </div>
 
         <div className="absolute right-2 top-[calc(env(safe-area-inset-top)+0.5rem)] flex gap-2">
           <button
