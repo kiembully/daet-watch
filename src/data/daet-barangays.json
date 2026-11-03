@@ -1,0 +1,195 @@
+{
+  "municipality": "Daet",
+  "province": "Camarines Norte",
+  "region": "Region V (Bicol Region)",
+  "psgcCode": "0501603000",
+  "adm3Pcode": "PH0501603",
+  "areaSqkm": 50.2301337207,
+  "centre": {
+    "lng": 122.95393,
+    "lat": 14.10793
+  },
+  "source": {
+    "publisher": "PSA PSGC 2023 (validOn 2023-11-06) + NAMRIA boundary layers via BetterGov.ph",
+    "file": "ph-barangays.geojson",
+    "note": "Centroids are polygon centroids, not official barangay hall locations."
+  },
+  "barangayCount": 25,
+  "barangays": [
+    {
+      "name": "Alawihao",
+      "psgcCode": "0501603001",
+      "areaSqkm": 3.2291129469,
+      "lng": 122.924096,
+      "lat": 14.109063
+    },
+    {
+      "name": "Awitan",
+      "psgcCode": "0501603002",
+      "areaSqkm": 2.32225403158,
+      "lng": 122.963197,
+      "lat": 14.139477
+    },
+    {
+      "name": "Bagasbas",
+      "psgcCode": "0501603003",
+      "areaSqkm": 2.83010271409,
+      "lng": 122.981312,
+      "lat": 14.134917
+    },
+    {
+      "name": "Barangay I (Pob.)",
+      "psgcCode": "0501603024",
+      "areaSqkm": 0.217024428194,
+      "lng": 122.961059,
+      "lat": 14.111618
+    },
+    {
+      "name": "Barangay II (Pob.)",
+      "psgcCode": "0501603025",
+      "areaSqkm": 0.368909123533,
+      "lng": 122.955385,
+      "lat": 14.10588
+    },
+    {
+      "name": "Barangay III (Pob.)",
+      "psgcCode": "0501603026",
+      "areaSqkm": 0.198639486075,
+      "lng": 122.954378,
+      "lat": 14.110681
+    },
+    {
+      "name": "Barangay IV (Pob.)",
+      "psgcCode": "0501603027",
+      "areaSqkm": 0.415619245641,
+      "lng": 122.948842,
+      "lat": 14.115305
+    },
+    {
+      "name": "Barangay V (Pob.)",
+      "psgcCode": "0501603028",
+      "areaSqkm": 0.440195644097,
+      "lng": 122.953616,
+      "lat": 14.119681
+    },
+    {
+      "name": "Barangay VI (Pob.)",
+      "psgcCode": "0501603029",
+      "areaSqkm": 0.156791676934,
+      "lng": 122.956403,
+      "lat": 14.116289
+    },
+    {
+      "name": "Barangay VII (Pob.)",
+      "psgcCode": "0501603030",
+      "areaSqkm": 0.319795935681,
+      "lng": 122.959625,
+      "lat": 14.116908
+    },
+    {
+      "name": "Barangay VIII (Pob.)",
+      "psgcCode": "0501603031",
+      "areaSqkm": 0.209730875744,
+      "lng": 122.961236,
+      "lat": 14.113767
+    },
+    {
+      "name": "Bibirao",
+      "psgcCode": "0501603004",
+      "areaSqkm": 4.03266108045,
+      "lng": 122.924818,
+      "lat": 14.09557
+    },
+    {
+      "name": "Borabod",
+      "psgcCode": "0501603005",
+      "areaSqkm": 2.70810208293,
+      "lng": 122.966166,
+      "lat": 14.127048
+    },
+    {
+      "name": "Calasgasan",
+      "psgcCode": "0501603006",
+      "areaSqkm": 6.29005986418,
+      "lng": 122.933068,
+      "lat": 14.080628
+    },
+    {
+      "name": "Camambugan",
+      "psgcCode": "0501603007",
+      "areaSqkm": 1.89708065487,
+      "lng": 122.944456,
+      "lat": 14.108299
+    },
+    {
+      "name": "Cobangbang (Carumpit)",
+      "psgcCode": "0501603008",
+      "areaSqkm": 1.60351411199,
+      "lng": 122.964255,
+      "lat": 14.10251
+    },
+    {
+      "name": "Dogongan",
+      "psgcCode": "0501603012",
+      "areaSqkm": 4.71747989186,
+      "lng": 122.90525,
+      "lat": 14.099509
+    },
+    {
+      "name": "Gahonon",
+      "psgcCode": "0501603013",
+      "areaSqkm": 1.89418052954,
+      "lng": 122.94985,
+      "lat": 14.127372
+    },
+    {
+      "name": "Gubat",
+      "psgcCode": "0501603014",
+      "areaSqkm": 2.69055166945,
+      "lng": 122.976392,
+      "lat": 14.117317
+    },
+    {
+      "name": "Lag-On",
+      "psgcCode": "0501603015",
+      "areaSqkm": 2.54951056502,
+      "lng": 122.939407,
+      "lat": 14.116425
+    },
+    {
+      "name": "Magang",
+      "psgcCode": "0501603018",
+      "areaSqkm": 1.85886032981,
+      "lng": 122.947409,
+      "lat": 14.096229
+    },
+    {
+      "name": "Mambalite",
+      "psgcCode": "0501603019",
+      "areaSqkm": 3.41643684528,
+      "lng": 122.984831,
+      "lat": 14.094431
+    },
+    {
+      "name": "Mancruz (Mangcruz)",
+      "psgcCode": "0501603021",
+      "areaSqkm": 1.18694784905,
+      "lng": 122.952419,
+      "lat": 14.089461
+    },
+    {
+      "name": "Pamorangon",
+      "psgcCode": "0501603023",
+      "areaSqkm": 1.91633639648,
+      "lng": 122.963518,
+      "lat": 14.092839
+    },
+    {
+      "name": "San Isidro",
+      "psgcCode": "0501603032",
+      "areaSqkm": 2.76023574133,
+      "lng": 122.976859,
+      "lat": 14.10452
+    }
+  ]
+}

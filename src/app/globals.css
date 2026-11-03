@@ -1,0 +1,231 @@
+@import "tailwindcss";
+
+/* Class-based dark mode: the shell sets .dark on <html> before paint. */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Tokens. Every colour is a CSS variable so the same utility name resolves in
+ * both themes. Contrast was measured, not eyeballed:
+ *   day-neutral 14.27:1 · day-amber 10.02:1 · day-red 4.87:1 · fixed 5.38:1
+ * (#0A8F5B measured 4.12 and was rejected for the "fixed" chip.)
+ */
+:root {
+  --c-paper: #f7f5f0;
+  --c-surface: #ffffff;
+  --c-surface-2: #efece4;
+  --c-ink: #0b0f14;
+  --c-body: #1c242c;
+  --c-muted: #5b6470;
+  --c-line: #dad6cc;
+  --c-line-strong: #b9b3a5;
+  --c-day-neutral: #e8e6df;
+  --c-day-neutral-ink: #14181d;
+  --c-day-amber: #f5b301;
+  --c-day-amber-ink: #1a1200;
+  --c-day-red: #d92b1f;
+  --c-day-red-ink: #ffffff;
+  --c-fixed: #087a4d;
+  --c-fixed-ink: #ffffff;
+  --c-accent: #d92b1f;
+  --c-accent-ink: #ffffff;
+  --c-focus: #1d4ed8;
+}
+
+.dark {
+  --c-paper: #0b0f14;
+  --c-surface: #141a20;
+  --c-surface-2: #1b232b;
+  --c-ink: #f2f0eb;
+  --c-body: #e3e0d8;
+  --c-muted: #98a4b1;
+  --c-line: #27313b;
+  --c-line-strong: #3b4855;
+  --c-day-neutral: #232c35;
+  --c-day-neutral-ink: #f2f0eb;
+  --c-day-amber: #f7bc1b;
+  --c-day-amber-ink: #1a1200;
+  --c-day-red: #f0483a;
+  --c-day-red-ink: #1a0d0b;
+  --c-fixed: #12a86b;
+  --c-fixed-ink: #04150d;
+  --c-accent: #f0483a;
+  --c-accent-ink: #1a0d0b;
+  --c-focus: #7aa2ff;
+}
+
+@theme inline {
+  --color-paper: var(--c-paper);
+  --color-surface: var(--c-surface);
+  --color-surface-2: var(--c-surface-2);
+  --color-ink: var(--c-ink);
+  --color-body: var(--c-body);
+  --color-muted: var(--c-muted);
+  --color-line: var(--c-line);
+  --color-line-strong: var(--c-line-strong);
+  --color-day-neutral: var(--c-day-neutral);
+  --color-day-neutral-ink: var(--c-day-neutral-ink);
+  --color-day-amber: var(--c-day-amber);
+  --color-day-amber-ink: var(--c-day-amber-ink);
+  --color-day-red: var(--c-day-red);
+  --color-day-red-ink: var(--c-day-red-ink);
+  --color-fixed: var(--c-fixed);
+  --color-fixed-ink: var(--c-fixed-ink);
+  --color-accent: var(--c-accent);
+  --color-accent-ink: var(--c-accent-ink);
+  --color-focus: var(--c-focus);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: var(--font-anton), "Arial Narrow", Impact, sans-serif;
+
+  --radius-card: 1rem;
+  --radius-sheet: 1.5rem;
+
+  --animate-sheet-in: sheet-in 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+  --animate-rise: rise 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+  --animate-shimmer: shimmer 1.4s linear infinite;
+}
+
+@keyframes sheet-in {
+  from {
+    transform: translateY(12%);
+    opacity: 0.4;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes rise {
+  from {
+    transform: translateY(8px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@layer base {
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--c-paper);
+    color: var(--c-body);
+    font-family: var(--font-sans);
+    overscroll-behavior-y: contain;
+  }
+
+  /* iOS Safari zooms the whole page when a focused control is under 16px and
+     never zooms back out. Every control is 16px on phones on purpose. */
+  @media (max-width: 640px) {
+    input,
+    select,
+    textarea {
+      font-size: 16px;
+    }
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--c-focus);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+    }
+  }
+}
+
+@utility safe-bottom {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 0.5rem);
+}
+
+@utility safe-top {
+  padding-top: env(safe-area-inset-top, 0px);
+}
+
+/* Native-feeling press: no layout shift, just a compress. */
+@utility press {
+  transition:
+    transform 0.12s ease,
+    opacity 0.12s ease;
+  &:active {
+    transform: scale(0.972);
+  }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-card);
+}
+
+@utility chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  max-width: 100%;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  border: 1px solid var(--c-line);
+  background: var(--c-surface);
+  color: var(--c-body);
+  font-size: 0.75rem;
+  line-height: 1.1;
+  font-weight: 600;
+  white-space: normal;
+}
+
+@utility skeleton {
+  background-image: linear-gradient(
+    90deg,
+    var(--c-surface-2) 25%,
+    var(--c-line) 37%,
+    var(--c-surface-2) 63%
+  );
+  background-size: 200% 100%;
+  animation: var(--animate-shimmer);
+  border-radius: 0.5rem;
+}
+
+/* The hero numeral. Condensed display face, tight tracking, tabular figures so
+   the width does not jump when DAY 99 becomes DAY 100. */
+@utility daynum {
+  font-family: var(--font-display);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 0.82;
+}
